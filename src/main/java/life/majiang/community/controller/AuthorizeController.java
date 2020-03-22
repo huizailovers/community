@@ -2,19 +2,18 @@ package life.majiang.community.controller;
 
 import life.majiang.community.dto.AccessTokenDto;
 import life.majiang.community.dto.GithubUser;
+import life.majiang.community.mapper.UserMapper;
+import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author  zhangch
  */
-@Controller
+@RestController
 @PropertySource(value = "classpath:githubclient.properties",encoding = "utf-8")
 public class AuthorizeController {
     @Autowired
@@ -26,6 +25,9 @@ public class AuthorizeController {
     private String clientSecret;
     @Value("${github.redirect.uri}")
     private String clientRedirecturi;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping("/callback")
     @ResponseBody
@@ -43,4 +45,36 @@ public class AuthorizeController {
 
         return githubUser;
     }
+    @GetMapping("/addUser")
+    @ResponseBody
+    public String  addUser(){
+        User user = new User();
+        user.setAccountId("xxx");
+        userMapper.insertUser(user);
+        return "success";
+    }
+
+    @GetMapping("/user")
+    @ResponseBody
+    public User getUserByName(@RequestParam("name") String name){
+        User user = userMapper.getUserByName(name);
+        System.out.println(user);
+        return user;
+    }
+
+    @GetMapping("/user1")
+    @ResponseBody
+    public User getUserByToken(String token){
+        User user = User.builder().name("zhangch").token(token).build();
+        System.out.println(user);
+        return user;
+    }
+
+    @PostMapping("/saveUser")
+    public String saveUser(@RequestBody User user){
+        System.out.println(user);
+        return  "ok";
+    }
+
+
 }
