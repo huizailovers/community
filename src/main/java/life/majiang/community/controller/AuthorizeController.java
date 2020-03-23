@@ -3,12 +3,15 @@ package life.majiang.community.controller;
 import life.majiang.community.dto.AccessTokenDto;
 import life.majiang.community.dto.GithubUser;
 import life.majiang.community.mapper.UserMapper;
+import life.majiang.community.mapper.UserMapperXml;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author  zhangch
@@ -28,6 +31,9 @@ public class AuthorizeController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserMapperXml userMapperXml;
 
     @GetMapping("/callback")
     @ResponseBody
@@ -74,6 +80,20 @@ public class AuthorizeController {
     public String saveUser(@RequestBody User user){
         System.out.println(user);
         return  "ok";
+    }
+
+    @GetMapping("/userXml")
+    public User findUserByName(
+            @RequestParam(value = "name", required = false, defaultValue = "zhangch") String name){
+        User user = userMapperXml.findUserByName(name);
+        System.out.println(user);
+        return user;
+    }
+
+    @GetMapping("/userList")
+    public  List<User> findUserList(@RequestParam("name") String name){
+        List<User> userlist = userMapperXml.findUserByNameLike(name);
+        return userlist;
     }
 
 

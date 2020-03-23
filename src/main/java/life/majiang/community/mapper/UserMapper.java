@@ -26,4 +26,6 @@ public interface UserMapper {
 
     @Select("select * from user where token like %${name}")
     User getUserByToken(String token);
+
+
 }

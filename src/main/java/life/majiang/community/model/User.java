@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
 
+import java.util.List;
+
 /**
  * @author  zhangch
  */
@@ -17,6 +19,7 @@ public class User {
     private String name;
     private String token;
     private Long gmtCreate;
+    private List<Orders> orders;
 
     @Tolerate
     public User() {}
